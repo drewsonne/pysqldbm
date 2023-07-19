@@ -115,7 +115,8 @@ def get_alter_statement(
 
 def print_json(obj: Union[Dict, List[Dict]]):
     """Prints a JSON object to the console with syntax highlighting."""
-    click.echo(click.style(json.dumps(obj, indent=2, sort_keys=True), fg="green"))
+    click.echo(click.style(json.dumps(
+        obj, indent=2, sort_keys=True), fg="green"))
 
 
 if __name__ == "__main__":
