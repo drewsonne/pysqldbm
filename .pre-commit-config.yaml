@@ -4,10 +4,26 @@ repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+    - id: check-yaml
+    - id: check-added-large-files
+    - id: check-added-large-files
+    - id: check-ast
+    - id: check-case-conflict
+    - id: check-executables-have-shebangs
+    - id: check-json
+    - id: check-merge-conflict
+    - id: check-shebang-scripts-are-executable
+    - id: check-yaml
+    - id: debug-statements
+    - id: detect-private-key
+    - id: end-of-file-fixer
+    - id: fix-byte-order-marker
+    - id: trailing-whitespace
+    - id: pretty-format-json
+      args: [ --autofix ]
+    - id: requirements-txt-fixer
 - repo: https://github.com/executablebooks/mdformat
   rev: 0.7.16  # Use the ref you want to point at
   hooks:
@@ -21,3 +37,4 @@ repos:
     hooks:
     -   id: black
         language_version: python3.10
+        args: [--diff, --line-length=120]
