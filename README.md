@@ -16,7 +16,8 @@ pip install pysqldm
 import pysqldbm
 
 # Create a client
-sqldbm = pysqldm.client()
+API_KEY = "your_api_key"
+sqldbm = pysqldbm.client(API_KEY)
 
 for project in sqldbm.projects.list():
     print(f"Show revisions for project '{project.name}'...")
