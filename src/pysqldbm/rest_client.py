@@ -1,7 +1,11 @@
-from typing import Dict, Generator
+from typing import Dict, Generator, Union, Type, TypeVar, Optional
 from urllib.parse import urljoin
 
 from requests import Session
+
+from pysqldbm.resources.base import BaseModel
+
+T = TypeVar("T", bound=BaseModel)
 
 
 class RestClient:
@@ -15,26 +19,23 @@ class RestClient:
             {"accept": "application/json", "Authorization": api_key}
         )
 
-    def get(
-        self, resource: str, encapsulating_class: type, is_list: bool
-    ) -> Generator[Dict, None, None]:
-        response = self._session.get(resource)
+    def get(self, resource: str, query: Optional[Dict] = None) -> Dict:
+        response = self._session.get(resource, params=query)
         response.raise_for_status()
 
-        result = response.json()["data"]
-        if is_list:
-            for item in result:
-                if self._return_dict:
-                    yield item  # Generator[Dict, None, None]
-                else:
-                    yield encapsulating_class(
-                        self, item
-                    )  # Generator[encapsulating_class, None, None]
-        else:
-            if self._return_dict:
-                yield result
-            else:
-                yield encapsulating_class(self, result)
+        return response.json()["data"]
+
+    def get_one(self, resource: str, encapsulating_class: Type[T], query: Optional[Dict] = None) -> Union[Dict, T]:
+        result = self.get(resource, query=query)
+        return encapsulating_class(self, **result) if not self._return_dict else result
+
+    def get_list(
+            self, resource: str, encapsulating_class: Type[T]
+    ) -> Generator[Union[Dict, T], None, None]:
+        for result in self.get(resource):
+            yield encapsulating_class(
+                self, **result
+            ) if not self._return_dict else result
 
 
 class SessionWithUrlBase(Session):

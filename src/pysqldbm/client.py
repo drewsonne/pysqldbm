@@ -1,4 +1,4 @@
-from pysqldbm.models.projects import Projects
+from pysqldbm.resources.projects import Projects
 from pysqldbm.rest_client import RestClient
 
 
