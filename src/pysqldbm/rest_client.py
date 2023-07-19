@@ -30,9 +30,7 @@ class RestClient:
         :param base_url: The base URL of the SQLDBM API.
         """
 
-        self._session = self.SessionWithUrlBase(
-            url_base=base_url.rstrip("/") + "/"
-        )  # Ensure we have a trailing slash, as urljoin() requires it.
+        self._session = self.SessionWithUrlBase(            url_base=base_url.rstrip("/") + "/"        )  # Ensure we have a trailing slash, as urljoin() requires it.
         self._session.headers.update(
             {"accept": "application/json", "Authorization": api_key}
         )
