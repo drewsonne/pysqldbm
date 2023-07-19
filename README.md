@@ -5,6 +5,7 @@ A python API to wrap https://developers.sqldbm.com/.
 ## `sqldbm` CLI tool
 
 ### Installation
+
 ```bash
 git clone git@github.com:drewsonne/pysqldbm.git
 cd pysqldbm
@@ -19,7 +20,6 @@ sqldb --help
 export SQLDB_API_KEY="your_api_key"
 sqldbm list-projects # or `sqldbm --api-key="your_api_key" list-projects`
 ```
-
 
 ## `pysqldbm` library
 
@@ -40,18 +40,8 @@ import pysqldbm
 API_KEY = "your_api_key"
 sqldbm = pysqldbm.client(API_KEY)
 
-for project in sqldbm.projects.list():
-    print(f"Show revisions for project '{project.name}'...")
-    for revision in project.revisions.list():
+for project in sqldbm.list_projects():
+    print(f"Show revisions for project '{project['name']}'...")
+    for revision in sqldbm.list_revisions(project['id']):
         print(revision)
-```
-
-### Sample Usage with Resources
-
-```python
-from pysqldbm.resources.revisions import Revision
-
-rev = Revision("project_id", "revision_id")
-rev.fetch()
-
 ```
