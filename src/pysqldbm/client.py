@@ -1,4 +1,4 @@
-from typing import Dict, List, Generator
+from typing import Dict, Generator
 
 from pysqldbm.rest_client import RestClient
 
