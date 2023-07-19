@@ -1,7 +1,8 @@
-import click
+import json
+from typing import Union, Dict, List
 
+import click
 from pysqldbm import Client
-from pysqldbm.resources.revisions import Revision
 
 
 @click.group()
@@ -11,29 +12,108 @@ def run(ctx: click.Context, api_key: str):
     ctx.obj = Client(api_key)
 
 
-## Projects
 @run.command("list-projects")
 @click.pass_obj
 def list_projects(client: Client):
-    for project in client.projects.list():
-        click.echo(f"{project.id} {project.name}")
+    print_json(*client.list_projects())
 
 
 @run.command("get-project")
-@click.option("--project-id")
+@click.option("--id", "id_", type=int, required=True)
 @click.pass_obj
-def get(client: Client, project_id: str):
-    project = client.projects.get(project_id)
-    click.echo(f"{project.id} {project.name}")
+def get(client: Client, id_: str):
+    for project in client.list_projects():
+        if project["id"] == id_:
+            print_json(project)
+            break
 
 
 # Revisions
-@run.command("get-revision")
-@click.option("--project-id")
-@click.option("--revision-id")
+@run.command("list-revisions")
+@click.option("--project-id", type=int, required=True)
 @click.pass_obj
-def get(client: Client, project_id: str, revision_id: str):
-    rev = Revision(client, project_id, revision_id).fetch()
+def list_revisions(client: Client, project_id: str):
+    print_json(*client.list_revisions(project_id))
+
+
+@run.command("get-revision")
+@click.option("--project-id", type=int, required=True)
+@click.option("--revision-id", type=int, required=True)
+@click.pass_obj
+def get_revisions(client: Client, project_id: str, revision_id: str):
+    print_json(client.get_revision(project_id, revision_id))
+
+
+@run.command("get-last-revision")
+@click.option("--project-id", type=int, required=True)
+@click.pass_obj
+def get_last_revisions(client: Client, project_id: str):
+    print_json(client.get_last_revision(project_id))
+
+
+@run.command("get-ddl")
+@click.option("--project-id", type=int, required=True)
+@click.option("--revision-id", type=int, required=True)
+@click.pass_obj
+def get_ddl(client: Client, project_id: str, revision_id: str):
+    print_json(client.get_ddl(project_id, revision_id))
+
+
+@run.command("get-last-ddl")
+@click.option("--project-id", type=int, required=True)
+@click.pass_obj
+def get_last_ddl(client: Client, project_id: str):
+    print_json(client.get_last_ddl(project_id))
+
+
+@run.command("list-environments")
+@click.option("--project-id", type=int, required=True)
+@click.pass_obj
+def list_environments(client: Client, project_id: str):
+    print_json(*client.list_environments(project_id))
+
+
+@run.command("get-latest-alter-statement")
+@click.option("--project-id", type=int, required=True)
+@click.option("--raw/--no-raw", default=False)
+@click.pass_obj
+def get_latest_alter_statement(client: Client, project_id: str, raw: bool):
+    statement = client.get_latest_alter_statement(project_id)
+    if raw:
+        click.echo(statement)
+    else:
+        print_json({"statement": statement})
+
+
+@run.command("get-alter-statement")
+@click.option("--project-id", type=int, required=True)
+@click.option("--revision-id", type=int, required=True)
+@click.option("--environment-id", type=int, required=True)
+@click.option("--with-revision-id", type=int, required=True)
+@click.option("--with-environment-id", type=int, required=True)
+@click.option("--raw/--no-raw", default=False)
+@click.pass_obj
+def get_alter_statement(
+    client: Client,
+    project_id: str,
+    revision_id: str,
+    environment_id: str,
+    with_revision_id: str,
+    with_environment_id: str,
+    raw: bool,
+):
+    statement = client.get_alter_statement(
+        project_id, revision_id, environment_id, with_revision_id, with_environment_id
+    )
+    if raw:
+        click.echo(statement)
+    else:
+        print_json({"statement": statement})
+
+
+def print_json(obj: Union[Dict, List[Dict]]):
+    """Prints a JSON object to the console with syntax highlighting."""
+    click.echo(click.style(json.dumps(obj, indent=2, sort_keys=True), fg="green"))
 
 
 if __name__ == "__main__":

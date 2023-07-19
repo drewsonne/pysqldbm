@@ -25,7 +25,7 @@ setup(
     package_dir={"": "src"},
     packages=[ "pysqldbm_cli", "pysqldbm"],
     include_package_data=True,
-    install_requires=["requests", "requests"],
+    install_requires=["requests", "requests", "backoff"],
     extras_require={"cli": ["click"]},
     entry_points={"console_scripts": ["sqldbm = pysqldbm_cli.run:run"]},
 )
