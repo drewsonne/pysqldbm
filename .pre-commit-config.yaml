@@ -37,4 +37,4 @@ repos:
     hooks:
     -   id: black
         language_version: python3.10
-        args: [--diff, --line-length=120]
+        args: ['.', '--line-length=120']
