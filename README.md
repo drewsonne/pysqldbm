@@ -2,6 +2,23 @@
 
 A python API to wrap https://developers.sqldbm.com/.
 
+## `sqldbm` CLI tool
+
+### Installation
+```bash
+pip install sqldbm
+```
+
+### Usage
+
+```bash
+sqldb --help
+
+export SQLDB_API_KEY="your_api_key"
+sqldbm list-projects # or `sqldbm --api-key="your_api_key" list-projects`
+```
+
+
 ## `pysqldbm` library
 
 ### Installation
