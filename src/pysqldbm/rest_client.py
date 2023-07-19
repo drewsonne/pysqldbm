@@ -68,8 +68,7 @@ class RestClient:
         # Stolen from: https://stackoverflow.com/a/43882437
         # In Python 3 you could place `url_base` after `*args`, but not in Python 2.
         def __init__(self, *args, url_base=None, **kwargs):
-            super(RestClient.SessionWithUrlBase,
-                  self).__init__(*args, **kwargs)
+            super(RestClient.SessionWithUrlBase, self).__init__(*args, **kwargs)
             self.url_base = url_base
 
         def request(self, method: str, url: str, **kwargs):
