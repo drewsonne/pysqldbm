@@ -23,7 +23,7 @@ setup(
     ],
     python_requires=">=3.10",
     package_dir={"": "src"},
-    packages=[ "pysqldbm_cli", "pysqldbm"],
+    packages=["pysqldbm_cli", "pysqldbm"],
     include_package_data=True,
     install_requires=["requests", "requests", "backoff"],
     extras_require={"cli": ["click"]},

@@ -2,14 +2,16 @@ import json
 from typing import Union, Dict, List
 
 import click
-from pysqldbm import Client
+
+import pysqldbm
+from pysqldbm.client import Client
 
 
 @click.group()
 @click.option("--api-key", "-k", envvar="SQLDBM_API_KEY")
 @click.pass_context
 def run(ctx: click.Context, api_key: str):
-    ctx.obj = Client(api_key)
+    ctx.obj = pysqldbm.client(api_key)
 
 
 @run.command("list-projects")
