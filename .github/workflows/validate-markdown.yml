@@ -1,10 +1,10 @@
 name: Validate Markdown
 
-on:
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
   build:
+    name: lint / markdown
     runs-on: ubuntu-latest
 
     steps:
