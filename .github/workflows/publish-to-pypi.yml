@@ -17,6 +17,8 @@ jobs:
         pip install
         build
         --user
+    - name: Set the version
+      run: python3 scripts/set-version.py
     - name: Build a binary wheel and a source tarball
       run: >-
         python3 -m
@@ -25,8 +27,6 @@ jobs:
         --wheel
         --outdir dist/
         .
-    - name: Set the version
-      run: python3 scripts/set-version.py
     - name: Publish distribution 📦 to Test PyPI
       if: startsWith(github.ref, 'refs/tags') != true
       uses: pypa/gh-action-pypi-publish@release/v1
