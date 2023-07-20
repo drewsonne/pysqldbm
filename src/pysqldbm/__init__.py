@@ -1,5 +1,7 @@
-import pysqldbm.client
+__all__ = ["client"]
+
+from pysqldbm.client import Client
 
 
-def client(api_key: str) -> "pysqldbm.client.Client":
-    return pysqldbm.client.Client(api_key)
+def client(api_key: str) -> "Client":
+    return Client(api_key)
