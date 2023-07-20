@@ -50,6 +50,6 @@ if __name__ == "__main__":
             print(f"Updated version in setup.py to use the git tag: {git_tag}")
         else:
             git_hash = get_git_hash()[:7]
-            new_version = f"{semver_version}+git-{git_hash}" if git_hash else semver_version
+            new_version = f"{semver_version}-dev{git_hash}" if git_hash else semver_version
             update_version_in_setup_py(new_version)
             print(f"Updated version in setup.py to use the git hash: {new_version}")
