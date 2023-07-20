@@ -27,6 +27,12 @@ sqldbm list-projects # or `sqldbm --api-key="your_api_key" list-projects`
 pip install pysqldbm
 ```
 
+If you would like to use the latest overnight builds, you can install from test pypi
+
+```bash
+pip install -i https://test.pypi.org/simple/ pysqldbm
+```
+
 ### Sample Usage with Client
 
 ```python
