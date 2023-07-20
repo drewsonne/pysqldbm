@@ -49,3 +49,7 @@ for project in sqldbm.list_projects():
     for revision in sqldbm.list_revisions(project['id']):
         print(revision)
 ```
+
+## Architecture
+
+See [ARCHITECTURE.md](ARCHITECTURE.md).
