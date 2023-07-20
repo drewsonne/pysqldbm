@@ -39,6 +39,19 @@ def update_version_in_setup_py(version):
         f.write(new_content)
 
 
+def build_hash_semver(semver_version: str, git_hash: str) -> str:
+    return f"{extract_semver(semver_version)}-dev{git_hash.upper()}"
+
+
+def extract_semver(text):
+    semver_pattern = r"^\b\d+\.\d+\.\d+"
+    semver_match = re.search(semver_pattern, text)
+    if semver_match:
+        return semver_match.group()
+    else:
+        return None
+
+
 if __name__ == "__main__":
     semver_version = get_version_from_setup_py()
     if not semver_version:
@@ -50,6 +63,6 @@ if __name__ == "__main__":
             print(f"Updated version in setup.py to use the git tag: {git_tag}")
         else:
             git_hash = get_git_hash()[:7]
-            new_version = f"{semver_version}-dev{git_hash}" if git_hash else semver_version
+            new_version = build_hash_semver(semver_version, git_hash) if git_hash else semver_version
             update_version_in_setup_py(new_version)
             print(f"Updated version in setup.py to use the git hash: {new_version}")
