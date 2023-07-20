@@ -7,9 +7,7 @@ A python API to wrap https://developers.sqldbm.com/.
 ### Installation
 
 ```bash
-git clone git@github.com:drewsonne/pysqldbm.git
-cd pysqldbm
-pip install -e .[cli]
+pip install pysqldbm[cli]
 ```
 
 ### Usage
@@ -26,9 +24,7 @@ sqldbm list-projects # or `sqldbm --api-key="your_api_key" list-projects`
 ### Installation
 
 ```bash
-git clone git@github.com:drewsonne/pysqldbm.git
-cd pysqldbm
-pip install -e .
+pip install pysqldbm
 ```
 
 ### Sample Usage with Client
