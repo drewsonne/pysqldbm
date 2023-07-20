@@ -1,3 +1,4 @@
+import os
 import re
 import subprocess
 import sys
@@ -22,11 +23,8 @@ def get_git_tag():
         return None
 
 
-def get_git_hash():
-    try:
-        return subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode("utf-8")
-    except subprocess.CalledProcessError:
-        return None
+def get_build_id() -> int:
+    return int(os.environ.get("GITHUB_RUN_ID", "1658821493"))
 
 
 def update_version_in_setup_py(version):
@@ -39,8 +37,8 @@ def update_version_in_setup_py(version):
         f.write(new_content)
 
 
-def build_hash_semver(semver_version: str, git_hash: str) -> str:
-    return f"{extract_semver(semver_version)}-dev{git_hash.upper()}"
+def build_hash_semver(semver_version: str, git_hash: int) -> str:
+    return f"{extract_semver(semver_version)}-dev{git_hash}"
 
 
 def extract_semver(text):
@@ -62,7 +60,7 @@ if __name__ == "__main__":
             update_version_in_setup_py(git_tag)
             print(f"Updated version in setup.py to use the git tag: {git_tag}")
         else:
-            git_hash = get_git_hash()[:7]
+            git_hash = get_build_id()
             new_version = build_hash_semver(semver_version, git_hash) if git_hash else semver_version
             update_version_in_setup_py(new_version)
             print(f"Updated version in setup.py to use the git hash: {new_version}")
