@@ -1,5 +1,7 @@
+import inspect
 import json
-from typing import Union, Dict, List
+from types import GeneratorType
+from typing import Union, Dict, List, Generator
 
 import click
 
@@ -17,7 +19,7 @@ def run(ctx: click.Context, api_key: str):
 @run.command("list-projects")
 @click.pass_obj
 def list_projects(client: Client):
-    print_json(*client.list_projects())
+    print_json(client.list_projects())
 
 
 @run.command("get-project")
@@ -35,7 +37,7 @@ def get(client: Client, id_: str):
 @click.option("--project-id", type=int, required=True)
 @click.pass_obj
 def list_revisions(client: Client, project_id: str):
-    print_json(*client.list_revisions(project_id))
+    print_json(client.list_revisions(project_id))
 
 
 @run.command("get-revision")
@@ -72,7 +74,7 @@ def get_last_ddl(client: Client, project_id: str):
 @click.option("--project-id", type=int, required=True)
 @click.pass_obj
 def list_environments(client: Client, project_id: str):
-    print_json(*client.list_environments(project_id))
+    print_json(client.list_environments(project_id))
 
 
 @run.command("get-latest-alter-statement")
@@ -113,7 +115,10 @@ def get_alter_statement(
         print_json({"statement": statement})
 
 
-def print_json(obj: Union[Dict, List[Dict]]):
+def print_json(obj: Union[Dict, List[Dict], Generator[Dict, None, None]]):
+    if isinstance(obj, GeneratorType):
+        obj = [o for o in obj]
+
     """Prints a JSON object to the console with syntax highlighting."""
     click.echo(click.style(json.dumps(obj, indent=2, sort_keys=True), fg="green"))
 
