@@ -9,7 +9,7 @@ with (Path(__file__).parent / "README.md").open(encoding="utf-8") as f:
 
 setup(
     name="pysqldbm",
-    version="1.0.3",
+    version="1.0.4",
     url="https://github.com/drewsonne/pysqldbm",
     license="Apache",
     author="Drew J. Sonne",
