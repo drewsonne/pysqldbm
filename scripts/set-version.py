@@ -31,7 +31,7 @@ def update_version_in_setup_py(version):
     with SETUP_PY_PATH.open("r") as f:
         content = f.read()
 
-    new_content = re.sub(r"version\s*=\s*['\"][^'\"]*['\"]", f'version = "{version}"', content)
+    new_content = re.sub(r"version\s*=\s*['\"][^'\"]*['\"]", f'version="{version}"', content)
 
     with SETUP_PY_PATH.open("w") as f:
         f.write(new_content)
