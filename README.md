@@ -13,7 +13,7 @@ pip install pysqldbm[cli]
 ### Usage
 
 ```bash
-sqldb --help
+sqldbm --help
 
 export SQLDB_API_KEY="your_api_key"
 sqldbm list-projects # or `sqldbm --api-key="your_api_key" list-projects`
