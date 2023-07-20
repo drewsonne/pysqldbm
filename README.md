@@ -1,4 +1,4 @@
-# pysqldm
+# pysqldbm
 
 [![PyPI Version](https://img.shields.io/pypi/v/pysqldbm.svg)](https://pypi.python.org/pypi/pysqldbm)
 
