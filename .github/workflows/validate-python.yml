@@ -20,7 +20,6 @@ jobs:
   build:
     name: lint / markdown
     runs-on: ubuntu-latest
-
     steps:
     - name: checkout aspire-virtues
       uses: actions/checkout@v2

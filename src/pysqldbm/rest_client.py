@@ -1,4 +1,4 @@
-from typing import Dict, Generator, Optional
+from typing import Dict, Generator, Optional, Union
 from urllib.parse import urljoin
 
 import backoff
@@ -41,7 +41,7 @@ class RestClient:
         on_backoff=backoff_hdlr,
         jitter=backoff.full_jitter,
     )
-    def get(self, resource: str, query: Optional[Dict] = None) -> Dict:
+    def get(self, resource: str, query: Optional[Dict] = None) -> Union[Dict, str]:
         """Get a resource from the SQLDBM API."""
         response = self._session.get(resource, params=query)
         if response.status_code == 429:
