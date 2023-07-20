@@ -1,9 +1,9 @@
-name: publish / pypi
+name: publish
 on: push
 
 jobs:
   build-n-publish:
-    name: publish / pypi
+    name: pypi
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
