@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 import backoff
 import click
-from requests import Session
+from requests import Session, Response
 
 
 class RateLimited(Exception):
@@ -69,7 +69,7 @@ class RestClient:
             super(RestClient.SessionWithUrlBase, self).__init__(*args, **kwargs)
             self.url_base = url_base
 
-        def request(self, method: str, url: str, **kwargs):
+        def request(self, method: str, url: str, **kwargs) -> Response:
             """Prepends the base URL to the resource passed in."""
             modified_url = urljoin(
                 self.url_base, url.lstrip("/")

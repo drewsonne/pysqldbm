@@ -49,3 +49,47 @@ friendly on a jittered interval.
 
 A custom `pysqldbm.rest_client.RestClient.SessionWithUrlBase` class is used in place of `requests.Session` so as to
 remove the requirement to repeatedly pass the base url to `RestClient.get(...)`.
+
+# Class Diagram
+
+```mermaid
+---
+title: Class Diagram
+---
+classDiagram
+    RateLimited <|-- Exception
+    RestClientSessionWithUrlBase <|-- RequestsSession
+
+    Client *-- RestClient
+    RestClient *-- RestClientSessionWithUrlBase
+    RestClient *-- RateLimited
+
+    class RequestsSession["requests.Session"]
+    class RateLimited["pysqldbm.rest_client.RateLimited"]
+    class Client["pysqldbm.client.Client"]{
+        +String BASE_URL
+        +__init__(api_key: str)
+        +list_projects() -> Generator[Dict, None, None]
+        +list_revisions(project_id: int) -> Generator[Dict, None, None]
+        +get_revision(project_id: int, revision_id: int) -> Dict
+        +get_revision_raw(project_id: int, revision_id: int) -> str
+        +get_latest_revision(project_id: int) -> Dict
+        +get_ddl(project_id: int, revision_id: int) -> str
+        +get_last_ddl(project_id: int) -> str
+        +list_environments(project_id: int) -> Generator[Dict, None, None]
+        +get_latest_alter_statement(project_id: int) -> str
+        +get_alter_statement(project_id: int, revision_id: int) -> str
+    }
+    class RestClient["pysqldbm.rest_client.RestClient"] {
+        +__init__(api_key: str)
+        -get(url: str) -> requests.Response
+        +get_list(url: str) -> Generator[Dict, None, None]
+        +get_one(url: str) -> Dict
+        +get_raw(url: str) -> str
+    }
+
+    class RestClientSessionWithUrlBase["pysqldbm.rest_clint.RestClient.SessionWithUrlBase"] {
+        +__init__(*args, url_base: str, **kwargs)
+        +request(method: str, url: str, *args, **kwargs) -> requests.Response
+    }
+```
