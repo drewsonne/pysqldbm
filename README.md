@@ -1,5 +1,7 @@
 # pysqldm
 
+[![PyPI Version](https://img.shields.io/pypi/v/pysqldbm.svg)](https://pypi.python.org/pypi/pysqldbm)
+
 A python API to wrap https://developers.sqldbm.com/.
 
 ## `sqldbm` CLI tool
