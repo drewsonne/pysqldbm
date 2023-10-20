@@ -1,0 +1,29 @@
+name: Run pre-commit
+
+# Run pre-commit on all pull requests
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  run-pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
+      - name: Comment if pre-commit failed
+        uses: actions/github-script@v6
+        # Only run if the previous step failed
+        if: "${{ failure() }}"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Pre-commit suggested some changes to your PR. To apply these suggestions, [install pre-commit](https://pre-commit.com/#install), then run\n```\npre-commit run --all-files\n```\nTo automatically run pre-commit every time you commit to this repo, run\n```\npre-commit install\n```\n"
+            })
