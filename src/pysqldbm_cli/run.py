@@ -1,4 +1,3 @@
-import inspect
 import json
 from types import GeneratorType
 from typing import Union, Dict, List, Generator
@@ -109,6 +108,35 @@ def get_alter_statement(
     statement = client.get_alter_statement(
         project_id, revision_id, environment_id, with_revision_id, with_environment_id
     )
+    if raw:
+        click.echo(statement)
+    else:
+        print_json({"statement": statement})
+
+
+@run.command("get-latest-object-ddl")
+@click.option("--project-id", type=int, required=True)
+@click.option("--object-name", type=str, required=True)
+@click.option("--case-sensitive", is_flag=True, default=False)
+@click.option("--raw/--no-raw", default=False)
+@click.pass_obj
+def get_latest_object_ddl(client: Client, project_id: str, object_name: str, case_sensitive: bool, raw: bool):
+    statement = client.get_latest_object_ddl(project_id, object_name, case_sensitive)
+    if raw:
+        click.echo(statement)
+    else:
+        print_json({"statement": statement})
+
+
+@run.command("get-object-ddl")
+@click.option("--project-id", type=int, required=True)
+@click.option("--revision-id", type=int, required=True)
+@click.option("--object-name", type=str, required=True)
+@click.option("--case-sensitive", is_flag=True, default=False)
+@click.option("--raw/--no-raw", default=False)
+@click.pass_obj
+def get_object_ddl(client: Client, project_id: str, revision_id, object_name: str, case_sensitive: bool, raw: bool):
+    statement = client.get_object_ddl(project_id, revision_id, object_name, case_sensitive)
     if raw:
         click.echo(statement)
     else:
