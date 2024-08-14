@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "pysqldbm"
+version = "1.0.6"
+description = "A library to wrap SQLdbm API"
+authors = ["Drew J. Sonne <drew.sonne@gmail.com>"]
+license = "LGPL-3.0-or-later"
+readme = "README.md"
+homepage = "https://github.com/drewsonne/pysqldbm"
+repository = "https://github.com/drewsonne/pysqldbm"
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+requests = "^2.0"
+backoff = "^1.0"
+
+[tool.poetry.extras]
+cli = ["click"]
+
+[tool.poetry.scripts]
+sqldbm = "pysqldbm_cli.run:run"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
