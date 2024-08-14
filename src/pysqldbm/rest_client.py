@@ -6,8 +6,7 @@ import click
 from requests import Session, Response
 
 
-class RateLimited(Exception):
-    ...
+class RateLimited(Exception): ...
 
 
 def backoff_hdlr(details):
