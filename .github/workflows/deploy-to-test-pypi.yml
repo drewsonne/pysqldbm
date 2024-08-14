@@ -1,4 +1,4 @@
-name: pypi-testhow
+name: pypi-test
 
 on:
   pull_request:
