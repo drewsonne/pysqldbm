@@ -1,0 +1,5 @@
+[tool.vulture]
+make_whitelist = true
+min_confidence = 80
+paths = ["src"]
+sort_by_size = true
