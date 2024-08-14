@@ -1,39 +1,56 @@
-name: publish
-on: push
+name: Deploy to PyPI
+
+on:
+  release:
+    types: [created]
+  push:
+    branches-ignore:
+      - main
 
 jobs:
-  build-n-publish:
-    name: pypi
+  deploy:
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    env:
+      POETRY_VIRTUALENVS_CREATE: "false"
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Set the version
-      run: python3 scripts/set-version.py
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        python3 -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-        .
-    - name: Publish distribution 📦 to Test PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-        repository-url: https://test.pypi.org/legacy/
-    - name: Publish distribution 📦 to PyPI
-      if: startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+          pipx inject poetry .
+
+      - name: Build
+        run: |
+          poetry version ${{ github.ref_name }}
+          poetry build
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  deploy-test:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    env:
+      POETRY_VIRTUALENVS_CREATE: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+          pipx inject poetry .
+
+      - name: Build
+        run: |
+          poetry build
+
+      - name: Publish package distributions to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: https://test.pypi.org/legacy/
