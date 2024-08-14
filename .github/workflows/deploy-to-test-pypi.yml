@@ -21,11 +21,17 @@ jobs:
           pipx install poetry
           pipx inject poetry .
 
-      - name: Set beta version
+
+      - name: Increment patch version and set version with short Git hash
         run: |
           VERSION=$(poetry version -s)
-          BETA_VERSION="${VERSION}.beta.${GITHUB_RUN_NUMBER}"
-          poetry version $BETA_VERSION
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+          NEW_PATCH=$((PATCH + 1))
+          SHORT_HASH=$(git rev-parse --short HEAD)
+          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}+${SHORT_HASH}"
+          poetry version $NEW_VERSION
 
       - name: Commit version change
         run: |
