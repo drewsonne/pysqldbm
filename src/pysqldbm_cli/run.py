@@ -1,4 +1,3 @@
-import inspect
 import json
 from types import GeneratorType
 from typing import Union, Dict, List, Generator
