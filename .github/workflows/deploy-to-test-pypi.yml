@@ -1,4 +1,4 @@
-name: pypi-test
+name: Deploy to Test PyPI
 
 on:
   pull_request:
@@ -20,6 +20,20 @@ jobs:
           pipx install poetry
           pipx inject poetry .
 
+      - name: Set beta version
+        run: |
+          VERSION=$(poetry version -s)
+          BETA_VERSION="${VERSION}.beta.${GITHUB_RUN_NUMBER}"
+          poetry version $BETA_VERSION
+
+      - name: Commit version change
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          git commit -m "Set beta version to $BETA_VERSION"
+          git push origin HEAD:${{ github.head_ref }}
+
       - name: Build
         run: |
           poetry build
@@ -28,4 +42,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository_url: https://test.pypi.org/legacy/
-          verbose: true
