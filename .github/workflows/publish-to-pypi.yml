@@ -6,6 +6,9 @@ on:
   push:
     branches-ignore:
       - main
+  pull_request:
+    branches-ignore:
+      - main
 
 jobs:
   deploy:
@@ -32,7 +35,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
 
   deploy-test:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
