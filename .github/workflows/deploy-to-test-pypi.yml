@@ -33,14 +33,6 @@ jobs:
           NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}+${SHORT_HASH}"
           poetry version $NEW_VERSION
 
-      - name: Commit version change
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add pyproject.toml
-          git commit -m "Set beta version to $BETA_VERSION"
-          git push origin HEAD:${{ github.head_ref }}
-
       - name: Build
         run: |
           poetry build
@@ -49,3 +41,11 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository_url: https://test.pypi.org/legacy/
+
+      - name: Commit version change
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          git commit -m "Set beta version to $BETA_VERSION"
+          git push origin HEAD:${{ github.head_ref }}
