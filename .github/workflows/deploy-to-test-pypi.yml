@@ -45,7 +45,9 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git stash
           git pull --rebase origin HEAD:${{ github.head_ref }}
+          git stash pop
           git add pyproject.toml
-          git commit -m "Set beta version to $BETA_VERSION"
+          git commit -m "Set version to $NEW_VERSION"
           git push origin HEAD:${{ github.head_ref }}
