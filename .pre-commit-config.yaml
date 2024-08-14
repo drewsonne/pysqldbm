@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
     - id: trailing-whitespace
     - id: end-of-file-fixer
@@ -25,7 +25,7 @@ repos:
       args: [ --autofix ]
     - id: requirements-txt-fixer
 - repo: https://github.com/executablebooks/mdformat
-  rev: 0.7.16  # Use the ref you want to point at
+  rev: 0.7.17  # Use the ref you want to point at
   hooks:
   - id: mdformat
     # Optionally add plugins
@@ -34,7 +34,7 @@ repos:
     - mdformat-frontmatter
     args: [ '--wrap', '120' ]
 - repo: https://github.com/psf/black
-  rev: '23.7.0'  # Use the sha / tag you want to point at
+  rev: '24.8.0'  # Use the sha / tag you want to point at
   hooks:
   - id: black
     language_version: python3.10
