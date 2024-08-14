@@ -1,4 +1,4 @@
-name: pypi-test
+name: pypi-testhow
 
 on:
   pull_request:
@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      contents: write  # Grant write permissions to the contents of the repository
     env:
       POETRY_VIRTUALENVS_CREATE: "false"
     steps:
