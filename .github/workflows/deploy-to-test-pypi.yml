@@ -1,0 +1,30 @@
+name: Deploy to Test PyPI
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    env:
+      POETRY_VIRTUALENVS_CREATE: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+          pipx inject poetry .
+
+      - name: Build
+        run: |
+          poetry build
+
+      - name: Publish package distributions to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: https://test.pypi.org/legacy/
