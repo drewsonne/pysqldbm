@@ -1,0 +1,46 @@
+name: pypi-test
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write  # Grant write permissions to the contents of the repository
+    env:
+      POETRY_VIRTUALENVS_CREATE: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+          pipx inject poetry .
+
+      - name: Increment patch version and set version with development release segment
+        run: |
+          # Increment patch version and set version with development release segment
+          VERSION=$(poetry version -s)
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+          NEW_PATCH=$((PATCH + 1))
+          BUILD_NUMBER=${GITHUB_RUN_NUMBER}
+          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}.dev${BUILD_NUMBER}"
+          poetry version $NEW_VERSION
+
+          # Export the new version for use in subsequent steps
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          poetry build
+
+      - name: Publish package distributions to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: https://test.pypi.org/legacy/
