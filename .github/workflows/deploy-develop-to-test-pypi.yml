@@ -37,6 +37,7 @@ jobs:
           # Increment patch version and set version with development release segment
           VERSION=$(poetry version -s)
           RELEASE_VERSION="${{ steps.fetch-latest-release.outputs.latest-release }}"
+          BRANCH_NAME="${{ github.ref_name }}"
           NEW_VERSION=$(sqldbm build version-bump --branch ${BRANCH_NAME} --current-version ${VERSION} --latest-release ${RELEASE_VERSION})
 
           poetry version $NEW_VERSION
