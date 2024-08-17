@@ -45,6 +45,11 @@ def test_branch_type(name: str, expected_type: BranchType):
         ("develop", "", 1, 1, "1.0.0", "1.1.0a1.dev1", "1.1.0b1"),
         ("main", "", "", "", "1.0.0", "1.1.0b1", "1.1.0rc1"),
         ("main", "1.1.0", "", "", "1.0.0", "1.1.0rc1", "1.1.0"),
+        # Test major bump version progress
+        ("feature/other", "", 1, 1, "1.0.0", "2.0.0", "2.0.0a1.dev1"),
+        ("develop", "", 1, 1, "1.0.0", "2.0.0a1.dev1", "2.0.0b1"),
+        ("main", "", "", "", "1.0.0", "2.0.0b1", "2.0.0rc1"),
+        ("main", "2.0.0", "", "", "1.0.0", "2.0.0rc1", "2.0.0"),
     ],
 )
 def test_bump_version(
