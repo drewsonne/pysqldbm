@@ -32,11 +32,11 @@ jobs:
           RELEASE_MINOR=$(echo $RELEASE_VERSION | cut -d. -f2)
           RELEASE_PATCH=$(echo $RELEASE_VERSION | cut -d. -f3)
 
-          DEVELOP_VERSION=$(poetry version -s)
-          DEVELOP_MAJOR=$(echo $DEVELOP_VERSION | tr "b" "." | cut -d. -f1)
-          DEVELOP_MINOR=$(echo $DEVELOP_VERSION | tr "b" "." | cut -d. -f2)
-          DEVELOP_PATCH=$(echo $DEVELOP_VERSION | tr "b" "." | cut -d. -f3)
-          DEVELOP_BETA=$(echo $DEVELOP_VERSION | tr "b" "." | cut -d. -f4)
+          DEVELOP_VERSION=$(poetry version -s | tr "b" ".")
+          DEVELOP_MAJOR=$(echo $DEVELOP_VERSION | cut -d. -f1)
+          DEVELOP_MINOR=$(echo $DEVELOP_VERSION | cut -d. -f2)
+          DEVELOP_PATCH=$(echo $DEVELOP_VERSION | cut -d. -f3)
+          DEVELOP_BETA=$(echo $DEVELOP_VERSION | cut -d. -f4)
 
           if [ $DEVELOP_MAJOR -gt $RELEASE_MAJOR ]; then
             NEW_MAJOR=$DEVELOP_MAJOR
