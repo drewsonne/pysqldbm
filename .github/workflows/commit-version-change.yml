@@ -42,21 +42,23 @@ jobs:
             NEW_MAJOR=$DEVELOP_MAJOR
             NEW_MINOR=0
             NEW_PATCH=0
+            NEW_BETA=1
           elif [ $DEVELOP_MINOR -gt $RELEASE_MINOR ]; then
             NEW_MAJOR=$DEVELOP_MAJOR
             NEW_MINOR=$DEVELOP_MINOR
             NEW_PATCH=0
+            NEW_BETA=1
           else
             NEW_MAJOR=$RELEASE_MAJOR
             NEW_MINOR=$RELEASE_MINOR
             NEW_PATCH=$((RELEASE_PATCH + 1))
+            if [ -z "${DEVELOP_BETA}" ]; then
+              NEW_BETA=1
+            else
+              NEW_BETA=$((BETA + 1))
+            fi
           fi
 
-          if [ -z "${BETA}" ]; then
-            NEW_BETA=1
-          else
-            NEW_BETA=$((BETA + 1))
-          fi
           NEW_VERSION="${NEW_MAJOR}.${NEW_MINOR}.${NEW_PATCH}b${NEW_BETA}"
 
           poetry version $NEW_VERSION
