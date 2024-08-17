@@ -5,3 +5,5 @@
 .eggs
 build
 dist
+.vscode
+poetry.lock

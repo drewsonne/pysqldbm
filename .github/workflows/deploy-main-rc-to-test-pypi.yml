@@ -3,7 +3,9 @@ name: pypi-test / develop
 on:
   push:
     branches:
-      - develop
+      - main
+    tags-ignore:
+      - '*'
 
 jobs:
   commit-version:
@@ -31,6 +33,7 @@ jobs:
 
       - name: Increment patch version and set version with development release segment
         run: |
+          set -x
           pip install -e '.[cli]'
 
           # Increment patch version and set version with development release segment
@@ -41,20 +44,18 @@ jobs:
 
           poetry version $NEW_VERSION
 
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          git commit -m "Set version to $NEW_VERSION"
+          git push origin develop
+
           # Export the new version for use in subsequent steps
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Build
         run: |
           poetry build
-
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Set version to $NEW_VERSION"
-          branch: develop
-          commit: true
-          add: "pyproject.toml"
-          push: true
 
       - name: Publish package distributions to Test PyPI
         uses: pypa/gh-action-pypi-publish@v1.9.0
