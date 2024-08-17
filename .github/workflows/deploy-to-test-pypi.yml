@@ -1,4 +1,4 @@
-name: pypi-test
+name: pypi-test / feature
 
 on:
   pull_request:
