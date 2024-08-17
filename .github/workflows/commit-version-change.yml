@@ -55,7 +55,7 @@ jobs:
             if [ -z "${DEVELOP_BETA}" ]; then
               NEW_BETA=1
             else
-              NEW_BETA=$((BETA + 1))
+              NEW_BETA=$((DEVELOP_BETA + 1))
             fi
           fi
 
