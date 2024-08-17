@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "pysqldbm"
-version = "1.0.7b2"
+version = "1.0.7b3"
 description = "A library to wrap SQLdbm API"
 authors = ["Drew J. Sonne <drew.sonne@gmail.com>"]
 license = "LGPL-3.0-or-later"
