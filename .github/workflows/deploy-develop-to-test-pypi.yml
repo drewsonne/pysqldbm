@@ -58,4 +58,4 @@ jobs:
       - name: Publish package distributions to Test PyPI
         uses: pypa/gh-action-pypi-publish@v1.9.0
         with:
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
