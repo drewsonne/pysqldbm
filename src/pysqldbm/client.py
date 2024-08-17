@@ -50,3 +50,15 @@ class Client:
                 "with_environment_id": with_environment_id,
             },
         )
+
+    def get_latest_object_ddl(self, project_id: str, object_name: str, case_sensitive: bool = False) -> str:
+        return self._rest.get_raw(
+            f"projects/{project_id}/revisions/last/objects/ddl",
+            query={"name": object_name, "caseSensitive": case_sensitive},
+        )
+
+    def get_object_ddl(self, project_id: str, revision_id: str, object_name: str, case_sensitive: bool = False) -> str:
+        return self._rest.get_raw(
+            f"projects/{project_id}/revisions/{revision_id}/objects/ddl",
+            query={"name": object_name, "caseSensitive": case_sensitive},
+        )

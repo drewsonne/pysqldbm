@@ -1,0 +1,63 @@
+name: pypi-test / develop
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  commit-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Grant write permissions to the contents of the repository
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    env:
+      POETRY_VIRTUALENVS_CREATE: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+          pipx inject poetry .
+      - name: Fetch latest release version
+        id: fetch-latest-release
+        uses: reloc8/action-latest-release-version@1.0.0
+
+      - name: Install poetry
+        run: |
+          pipx install poetry
+          pipx inject poetry .
+
+      - name: Increment patch version and set version with development release segment
+        run: |
+          pip install -e '.[cli]'
+
+          # Increment patch version and set version with development release segment
+          VERSION=$(poetry version -s)
+          RELEASE_VERSION="${{ steps.fetch-latest-release.outputs.latest-release }}"
+          BRANCH_NAME="${{ github.ref_name }}"
+          NEW_VERSION=$(sqldbm build version-bump --branch ${BRANCH_NAME} --current-version ${VERSION} --latest-release ${RELEASE_VERSION})
+
+          poetry version $NEW_VERSION
+
+          # Export the new version for use in subsequent steps
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          poetry build
+
+      - name: Publish package distributions to Test PyPI
+        uses: pypa/gh-action-pypi-publish@v1.9.0
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Set version to $NEW_VERSION"
+          branch: develop
+          commit: true
+          add: "pyproject.toml"
+          push: true
