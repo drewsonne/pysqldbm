@@ -31,7 +31,6 @@ jobs:
 
       - name: Increment patch version and set version with development release segment
         run: |
-          set -x
           pip install -e '.[cli]'
 
           # Increment patch version and set version with development release segment

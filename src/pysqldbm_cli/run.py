@@ -1,11 +1,13 @@
 import json
 from types import GeneratorType
 from typing import Union, Dict, List, Generator
+from packaging.version import Version
 
 import click
 
 import pysqldbm
 from pysqldbm.client import Client
+from pysqldbm_cli.build import bump_version
 
 
 @click.group()
@@ -141,6 +143,36 @@ def get_object_ddl(client: Client, project_id: str, revision_id, object_name: st
         click.echo(statement)
     else:
         print_json({"statement": statement})
+
+
+# Add hidden build commands
+@run.group("build", hidden=True)
+def build(): ...
+
+
+@build.command("version-bump")
+@click.option("-B", "--branch", help="Branch name", required=True)
+@click.option("-b", "--build", help="Build number", type=int)
+@click.option("-p", "--pr", help="Pull Request number", type=int)
+@click.option("-t", "--tag", help="Tag version", type=str, default=None)
+@click.option("-c", "--current-version", help="Current version", type=Version, required=True)
+@click.option(
+    "-l",
+    "--latest-release",
+    default=None,
+    help="Latest release version",
+    type=Version,
+    required=True,
+)
+def version_bump(
+    branch: str,
+    build: int,
+    pr: int,
+    tag: str | None,
+    latest_release: Version,
+    current_version: Version,
+):
+    click.echo(bump_version(branch, tag, build, pr, latest_release, current_version))
 
 
 def print_json(obj: Union[Dict, List[Dict], Generator[Dict, None, None]]):

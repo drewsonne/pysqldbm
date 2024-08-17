@@ -53,3 +53,18 @@ for project in sqldbm.list_projects():
 ## Architecture
 
 See [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Release Versioning
+
+### Feature Branch
+
+${MAJOR}.${MINOR}.${PATCH}.pre${PR_NUMBER}.dev${BUILD_NUMBER}
+
+### Beta
+
+When pushing into the develop branch, the following conditions are evaluated:
+
+- If the develop version is ahead of the latest release version, use the develop version, and set the beta version to 1
+- If the develop version is not ahead of the latest use the develop version, and increment the beta version
+
+This is handled in the `.github/workflows/beta-version-bump.yml`.
