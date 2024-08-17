@@ -86,7 +86,10 @@ def bump_version(
     elif branch == BranchType.DEVELOP:
         return _bump_version_develop(latest_release, current_version)
 
-    return _bump_version_feature(build, pr, latest_release, current_version)
+    elif branch == BranchType.FEATURE:
+        return _bump_version_feature(build, pr, latest_release, current_version)
+
+    raise ValueError(f"Unknown branch type: {branch}")
 
 
 def _bump_version_main(
@@ -208,7 +211,7 @@ def _bump_version_feature(
     return r.version()
 
 
-def _branch_type(branch: str) -> BranchType:
+def get_branch_type(branch: str) -> BranchType:
     """
     Determine the type of branch based on its name.
 

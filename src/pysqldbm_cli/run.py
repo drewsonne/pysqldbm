@@ -7,7 +7,7 @@ import click
 
 import pysqldbm
 from pysqldbm.client import Client
-from pysqldbm_cli.build import bump_version
+from pysqldbm_cli.build import bump_version, get_branch_type
 
 
 @click.group()
@@ -137,7 +137,14 @@ def get_latest_object_ddl(client: Client, project_id: str, object_name: str, cas
 @click.option("--case-sensitive", is_flag=True, default=False)
 @click.option("--raw/--no-raw", default=False)
 @click.pass_obj
-def get_object_ddl(client: Client, project_id: str, revision_id, object_name: str, case_sensitive: bool, raw: bool):
+def get_object_ddl(
+    client: Client,
+    project_id: str,
+    revision_id,
+    object_name: str,
+    case_sensitive: bool,
+    raw: bool,
+):
     statement = client.get_object_ddl(project_id, revision_id, object_name, case_sensitive)
     if raw:
         click.echo(statement)
@@ -155,13 +162,12 @@ def build(): ...
 @click.option("-b", "--build", help="Build number", type=int)
 @click.option("-p", "--pr", help="Pull Request number", type=int)
 @click.option("-t", "--tag", help="Tag version", type=str, default=None)
-@click.option("-c", "--current-version", help="Current version", type=Version, required=True)
+@click.option("-c", "--current-version", help="Current version", required=True)
 @click.option(
     "-l",
     "--latest-release",
     default=None,
     help="Latest release version",
-    type=Version,
     required=True,
 )
 def version_bump(
@@ -169,10 +175,19 @@ def version_bump(
     build: int,
     pr: int,
     tag: str | None,
-    latest_release: Version,
-    current_version: Version,
+    latest_release: str,
+    current_version: str,
 ):
-    click.echo(bump_version(branch, tag, build, pr, latest_release, current_version))
+    click.echo(
+        bump_version(
+            get_branch_type(branch),
+            tag,
+            build,
+            pr,
+            Version(latest_release),
+            Version(current_version),
+        )
+    )
 
 
 def print_json(obj: Union[Dict, List[Dict], Generator[Dict, None, None]]):

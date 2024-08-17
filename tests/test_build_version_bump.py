@@ -22,7 +22,8 @@ def cli_runner() -> CLITestRunner:
             "feature/branch",
             "--build 1 --pr 1 --tag " " --current-version 1.0.0 --latest-release 1.0.0",
             "1.0.1a1.dev1\n",
-        )
+        ),
+        ("develop", "--current-version 1.0.7b2 --latest-release 1.0.6", "1.0.7b3\n"),
     ],
 )
 def test_feature_branch(cli_runner: CLITestRunner, branch: str, options: str, expected_output: str):
