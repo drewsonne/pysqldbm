@@ -53,3 +53,10 @@ for project in sqldbm.list_projects():
 ## Architecture
 
 See [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Release
+
+When pushing into the develop branch, the following conditions are evaluated:
+
+- If the develop version is ahead of the latest release version, use the develop version, and set the beta version to 1
+- If the develop version is not ahead of the latest use the develop version, and increment the beta version
