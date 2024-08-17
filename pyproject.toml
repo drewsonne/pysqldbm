@@ -18,9 +18,10 @@ python = ">=3.10"
 requests = "^2.0"
 backoff = "^1.0"
 click = "^8.1.7"
+packaging = "^24.1"
 
 [tool.poetry.extras]
-cli = ["click"]
+cli = ["click", "packaging"]
 
 [tool.poetry.scripts]
 sqldbm = "pysqldbm_cli.run:run"
