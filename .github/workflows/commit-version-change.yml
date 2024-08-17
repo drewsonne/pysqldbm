@@ -26,6 +26,7 @@ jobs:
 
       - name: Increment patch version and set version with development release segment
         run: |
+          set -x
           RELEASE_VERSION="${{ steps.fetch-latest-release.outputs.latest-release }}"
           RELEASE_MAJOR=$(echo $RELEASE_VERSION | cut -d. -f1)
           RELEASE_MINOR=$(echo $RELEASE_VERSION | cut -d. -f2)
