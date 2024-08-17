@@ -48,6 +48,12 @@ jobs:
         run: |
           poetry build
 
+      - name: Publish package distributions to Test PyPI
+        uses: pypa/gh-action-pypi-publish@v1.9.0
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Set version to $NEW_VERSION"
@@ -55,8 +61,3 @@ jobs:
           commit: true
           add: "pyproject.toml"
           push: true
-
-      - name: Publish package distributions to Test PyPI
-        uses: pypa/gh-action-pypi-publish@v1.9.0
-        with:
-          repository-url: https://test.pypi.org/legacy/
