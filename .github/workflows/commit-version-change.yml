@@ -57,7 +57,7 @@ jobs:
           else
             NEW_BETA=$((BETA + 1))
           fi
-          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}b${NEW_BETA}"
+          NEW_VERSION="${NEW_MAJOR}.${NEW_MINOR}.${NEW_PATCH}b${NEW_BETA}"
 
           poetry version $NEW_VERSION
 
