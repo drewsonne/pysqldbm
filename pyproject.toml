@@ -8,17 +8,27 @@ license = "LGPL-3.0-or-later"
 readme = "README.md"
 homepage = "https://github.com/drewsonne/pysqldbm"
 repository = "https://github.com/drewsonne/pysqldbm"
+packages = [
+    { include = "pysqldbm", from = "src" },
+    { include = "pysqldbm_cli", from = "src" }
+]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
 requests = "^2.0"
 backoff = "^1.0"
+click = "^8.1.7"
 
 [tool.poetry.extras]
 cli = ["click"]
 
 [tool.poetry.scripts]
 sqldbm = "pysqldbm_cli.run:run"
+
+[tool.poetry.group.dev.dependencies]
+click = "^8.1.7"
+packaging = "^24.1"
+pytest = "^8.3.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
