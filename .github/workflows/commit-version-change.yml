@@ -20,18 +20,30 @@ jobs:
           pipx install poetry
           pipx inject poetry .
 
+      - name: Fetch latest release version
+        id: fetch-latest-release
+        uses: reloc8/action-latest-release-version@1.0.0
+
       - name: Increment patch version and set version with development release segment
         run: |
+          MAIN_VERSION=${{ steps.fetch-latest-release.outputs.latest-release }}
           VERSION=$(poetry version -s)
-          MAJOR=$(echo $VERSION | cut -d. -f1)
-          MINOR=$(echo $VERSION | cut -d. -f2)
-          PATCH=$(echo $VERSION | cut -d. -f3)
+          MAJOR=$(echo $VERSION | tr "b" "." | cut -d. -f1)
+          MINOR=$(echo $VERSION | tr "b" "." | cut -d. -f2)
+          PATCH=$(echo $VERSION | tr "b" "." | cut -d. -f3)
+          BETA=$(echo $VERSION | tr "b" "." | cut -d. -f4)
+
           NEW_PATCH=$((PATCH + 1))
-          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}"
+
+          if [[ -z "${BETA}" ]]; then
+            NEW_BETA=1
+          elif
+            NEW_BETA=$((BETA + 1))
+          fi
+          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}b${NEW_BETA}"
+
           poetry version $NEW_VERSION
 
-      - name: Commit version change
-        run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml
