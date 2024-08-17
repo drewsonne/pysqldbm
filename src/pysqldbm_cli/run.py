@@ -191,6 +191,16 @@ def version_bump(
 
 
 def print_json(obj: Union[Dict, List[Dict], Generator[Dict, None, None]]):
+    """
+    Print a JSON object to the console with syntax highlighting.
+
+    Args:
+        obj (Union[Dict, List[Dict], Generator[Dict, None, None]]): The JSON object to print.
+            This can be a dictionary, a list of dictionaries, or a generator of dictionaries.
+
+    Returns:
+        None
+    """
     if isinstance(obj, GeneratorType):
         obj = [o for o in obj]
 
