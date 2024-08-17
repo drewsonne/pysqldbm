@@ -24,7 +24,7 @@ jobs:
         run: |
           pipx install poetry
           pipx inject poetry .
-          pipx install -e .
+          pipx install -e '.[cli]'
 
       - name: Increment patch version and set version with development release segment
         run: |
