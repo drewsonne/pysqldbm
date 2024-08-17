@@ -74,7 +74,7 @@ def bump_version(
         tag (str | None): A specific version tag, if provided.
         build (int): The build number.
         pr (int): The pull request number.
-        latest_release (Version): The latest release version.
+        latest_release (Version): The latest released tag version from the main branch.
         current_version (Version): The current version of the software.
 
     Returns:
@@ -192,7 +192,15 @@ def _bump_version_feature(
     Finally, it returns the new version.
     """
     r = Release(dev=build, alpha=pr)
-    if current_version > latest_release:
+    # If we're in beta and the major and minor are the same, don't increment
+    # the micro number
+    if current_version.pre and current_version.pre[0] == "b":
+        r.major, r.minor, r.micro = (
+            current_version.major,
+            current_version.minor,
+            current_version.micro,
+        )
+    elif current_version > latest_release:
         r.major, r.minor, r.micro = (
             current_version.major,
             current_version.minor,
