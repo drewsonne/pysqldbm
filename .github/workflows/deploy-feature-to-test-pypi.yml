@@ -27,14 +27,18 @@ jobs:
 
       - name: Increment patch version and set version with development release segment
         run: |
-          pip install -e '.[cli]'
+          pip install '.[cli]'
 
           # Increment patch version and set version with development release segment
-          VERSION=$(poetry version -s)
-          RELEASE_VERSION="${{ steps.fetch-latest-release.outputs.latest-release }}"
-          PR_NUMBER="${{ github.event.number }}"
-          BRANCH_NAME="${{ github.ref_name }}"
-          NEW_VERSION=$(sqldbm build version-bump --branch ${BRANCH_NAME} --build ${GITHUB_RUN_NUMBER} --pr ${PR_NUMBER} --current-version ${VERSION} --latest-release ${RELEASE_VERSION})
+          CURRENT_VERSION=$(poetry version -s)
+          NEW_VERSION=$(sqldbm \
+            build \
+            version-bump \
+            feature \
+              --build ${GITHUB_RUN_NUMBER} \
+              --pr ${{ github.event.number }} \
+              --current-version ${CURRENT_VERSION} \
+              --latest-release ${{ steps.fetch-latest-release.outputs.latest-release }})
 
           poetry version $NEW_VERSION
 

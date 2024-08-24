@@ -66,26 +66,21 @@ def test_bump_version_develop(latest_release: str, current_version: str, expecte
 
 
 @pytest.mark.parametrize(
-    "tag,current_version,expected_version",
+    "current_version,latest_version,expected_version",
     [
-        ("", "1.0.1b1", "1.0.1rc1"),
-        ("", "1.0.1rc1", "1.0.1rc2"),
-        ("1.0.1", "1.0.1rc1", "1.0.1"),
-        ("1.0.2", "1.0.1rc1", "1.0.2"),
-        # Test version progression
-        ("", "1.0.1b1", "1.0.1rc1"),
-        ("1.0.1", "1.0.1rc1", "1.0.1"),
-        # Test minor bump version progression
-        ("", "1.1.0b1", "1.1.0rc1"),
-        ("1.1.0", "1.1.0rc1", "1.1.0"),
-        # Test major bump version progress
-        ("", "2.0.0b1", "2.0.0rc1"),
-        ("2.0.0", "2.0.0rc1", "2.0.0"),
+        ("1.0.1b1", "1.0.0", "1.0.1"),
+        ("1.0.1b2", "1.0.0", "1.0.1"),
+        ("2.2.1b1", "2.2.0", "2.2.1"),
+        ("2.0.1b1", "2.0.0", "2.0.1"),
+        ("1.0.7b3", "1.0.6", "1.0.7"),
+        ("1.1.0b1", "1.0.0", "1.1.0"),
+        ("1.1.0b1", "1.0.0", "1.1.0"),
+        ("1.0.0", "1.0.1", "1.0.2"),
     ],
 )
-def test_bump_version_main(tag: str, current_version: str, expected_version: str):
+def test_bump_version_main(current_version: str, latest_version: str, expected_version: str):
     actual_version = bump_version_main(
-        tag,
+        Version(latest_version),
         Version(current_version),
     ).__str__()
     assert expected_version == actual_version

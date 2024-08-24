@@ -7,7 +7,11 @@ import click
 
 import pysqldbm
 from pysqldbm.client import Client
-from pysqldbm_cli.build import bump_version, get_branch_type
+from pysqldbm_cli.build import (
+    bump_version_develop,
+    bump_version_feature,
+    bump_version_main,
+)
 
 
 @click.group()
@@ -157,37 +161,54 @@ def get_object_ddl(
 def build(): ...
 
 
-@build.command("version-bump")
-@click.option("-B", "--branch", help="Branch name", required=True)
-@click.option("-b", "--build", help="Build number", type=int)
-@click.option("-p", "--pr", help="Pull Request number", type=int)
-@click.option("-t", "--tag", help="Tag version", type=str, default=None)
+@build.group("version-bump")
+def version_bump(): ...
+
+
+@version_bump.command("feature")
+@click.option("-b", "--build", help="Build number", type=int, required=True)
+@click.option("-p", "--pr", help="Pull Request number", type=int, required=True)
 @click.option("-c", "--current-version", help="Current version", required=True)
-@click.option(
-    "-l",
-    "--latest-release",
-    default=None,
-    help="Latest release version",
-    required=True,
-)
-def version_bump(
-    branch: str,
+@click.option("-l", "--latest-release", help="Latest release version", required=True)
+def version_bump_feature(
     build: int,
     pr: int,
-    tag: str | None,
     latest_release: str,
     current_version: str,
 ):
     click.echo(
-        bump_version(
-            get_branch_type(branch),
-            tag,
+        bump_version_feature(
             build,
             pr,
             Version(latest_release),
             Version(current_version),
         )
     )
+
+
+@version_bump.command("develop")
+@click.option("-c", "--current-version", help="Current version", required=True)
+@click.option("-l", "--latest-release", help="Latest release version", required=True)
+def version_bump_develop(
+    current_version: str,
+    latest_release: str,
+):
+    click.echo(
+        bump_version_develop(
+            Version(latest_release),
+            Version(current_version),
+        )
+    )
+
+
+@version_bump.command("main")
+@click.option("-c", "--current-version", help="Current version", required=True)
+@click.option("-l", "--latest-release", help="Latest release version", required=True)
+def version_bump_main(
+    latest_release: str,
+    current_version: str,
+):
+    click.echo(bump_version_main(Version(latest_release), Version(current_version)))
 
 
 def print_json(obj: Union[Dict, List[Dict], Generator[Dict, None, None]]):
