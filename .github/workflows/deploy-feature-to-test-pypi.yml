@@ -35,10 +35,10 @@ jobs:
             build \
             version-bump \
             feature \
-              --build ${GITHUB_RUN_NUMBER} \
-              --pr ${{ github.event.number }} \
-              --current-version ${CURRENT_VERSION} \
-              --latest-release ${{ steps.fetch-latest-release.outputs.latest-release }})
+              --build "${GITHUB_RUN_NUMBER}" \
+              --pr "${{ github.event.number }}" \
+              --current-version "${CURRENT_VERSION}" \
+              --latest-release "${{ steps.fetch-latest-release.outputs.latest-release }}")
 
           poetry version $NEW_VERSION
 

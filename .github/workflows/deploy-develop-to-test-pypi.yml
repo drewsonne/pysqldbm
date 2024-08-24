@@ -20,6 +20,7 @@ jobs:
         run: |
           pipx install poetry
           pipx inject poetry .
+
       - name: Fetch latest release version
         id: fetch-latest-release
         uses: reloc8/action-latest-release-version@1.0.0
@@ -31,13 +32,16 @@ jobs:
 
       - name: Increment patch version and set version with development release segment
         run: |
-          pip install -e '.[cli]'
+          pip install '.[cli]'
 
           # Increment patch version and set version with development release segment
-          VERSION=$(poetry version -s)
-          RELEASE_VERSION="${{ steps.fetch-latest-release.outputs.latest-release }}"
-          BRANCH_NAME="${{ github.ref_name }}"
-          NEW_VERSION=$(sqldbm build version-bump --branch ${BRANCH_NAME} --current-version ${VERSION} --latest-release ${RELEASE_VERSION})
+          CURRENT_VERSION=$(poetry version -s)
+          NEW_VERSION=$(sqldbm \
+            build \
+            version-bump \
+            develop \
+              --current-version "${CURRENT_VERSION}" \
+              --latest-release "${{ steps.fetch-latest-release.outputs.latest-release }}")
 
           poetry version $NEW_VERSION
 
