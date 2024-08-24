@@ -1,12 +1,5 @@
 from dataclasses import dataclass
-from enum import Enum, auto
 from packaging.version import Version
-
-
-class BranchType(Enum):
-    FEATURE = auto()
-    DEVELOP = auto()
-    MAIN = auto()
 
 
 @dataclass
@@ -28,9 +21,9 @@ class Release:
             Return the version string ready for consumption by packaging.version.Version.
     """
 
-    major: int | None = None
-    minor: int | None = None
-    micro: int | None = None
+    major: int
+    minor: int
+    micro: int
     rc: int | None = None
     alpha: int | None = None
     dev: int | None = None
@@ -58,79 +51,26 @@ class Release:
         return Version(v)
 
 
-def bump_version(
-    branch: BranchType,
-    tag: str | None,
-    build: int,
-    pr: int,
-    latest_release: Version,
+def bump_version_main(
+    latest_version: Version,
     current_version: Version,
 ) -> Version:
-    """
-    Bump the version based on the branch type and where the current version is at.
-
-    Args:
-        branch (BranchType): The type of the branch (MAIN, DEVELOP, or FEATURE).
-        tag (str | None): A specific version tag, if provided.
-        build (int): The build number.
-        pr (int): The pull request number.
-        latest_release (Version): The latest released tag version from the main branch.
-        current_version (Version): The current version of the software.
-
-    Returns:
-        Version: The next version of the software.
-    """
-    if branch == BranchType.MAIN:
-        return _bump_version_main(tag, current_version)
-
-    elif branch == BranchType.DEVELOP:
-        return _bump_version_develop(latest_release, current_version)
-
-    elif branch == BranchType.FEATURE:
-        return _bump_version_feature(build, pr, latest_release, current_version)
-
-    raise ValueError(f"Unknown branch type: {branch}")
-
-
-def _bump_version_main(
-    tag: str | None,
-    current_version: Version,
-) -> Version:
-    """
-    Determine the next version for the main branch.
-
-    Args:
-        tag (str | None): A specific version tag, if provided.
-        current_version (Version): The current version of the software.
-
-    Returns:
-        Version: The next version of the software.
-
-    If a tag is provided, this function returns the version corresponding to the tag.
-    If no tag is provided, it checks if the current version has a pre-release segment.
-    If the pre-release segment is a beta version, it sets the release candidate (rc) to 1.
-    If the pre-release segment is a release candidate, it increments the rc number.
-    Finally, it creates a new Release object with the current version's major, minor, and micro numbers,
-    and the updated rc value if applicable, then returns the new version.
-    """
-    if tag:
-        return Version(tag)
-
-    rc = None
-    if current_version.pre:
-        if current_version.pre[0] == "b":
-            rc = 1
-        elif current_version.pre[0] == "rc":
-            rc = current_version.pre[1] + 1
-    return Release(
-        major=current_version.major,
-        minor=current_version.minor,
-        micro=current_version.micro,
-        rc=rc,
+    return (
+        Release(
+            current_version.major,
+            current_version.minor,
+            current_version.micro,
+        )
+        if current_version > latest_version
+        else Release(
+            latest_version.major,
+            latest_version.minor,
+            latest_version.micro + 1,
+        )
     ).version()
 
 
-def _bump_version_develop(
+def bump_version_develop(
     latest_release: Version,
     current_version: Version,
 ) -> Version:
@@ -166,7 +106,7 @@ def _bump_version_develop(
     ).version()
 
 
-def _bump_version_feature(
+def bump_version_feature(
     build: int,
     pr: int,
     latest_release: Version,
@@ -191,7 +131,7 @@ def _bump_version_feature(
     If the current version is not greater than the latest release, it increments the micro number of the latest release.
     Finally, it returns the new version.
     """
-    r = Release(dev=build, alpha=pr)
+    r = Release(0, 0, 0, dev=build, alpha=pr)
     # If we're in beta and the major and minor are the same, don't increment
     # the micro number
     if current_version.pre and current_version.pre[0] == "b":
@@ -217,26 +157,3 @@ def _bump_version_feature(
             latest_release.micro + 1,
         )
     return r.version()
-
-
-def get_branch_type(branch: str) -> BranchType:
-    """
-    Determine the type of branch based on its name.
-
-    Args:
-        branch (str): The name of the branch.
-
-    Returns:
-        BranchType: The type of the branch (MAIN, DEVELOP, or FEATURE).
-
-    This function checks the name of the branch and returns the corresponding BranchType.
-    - If the branch name is "main", it returns BranchType.MAIN.
-    - If the branch name is "develop", it returns BranchType.DEVELOP.
-    - For any other branch name, it returns BranchType.FEATURE.
-    """
-    if branch == "main":
-        return BranchType.MAIN
-    elif branch == "develop":
-        return BranchType.DEVELOP
-    else:
-        return BranchType.FEATURE
